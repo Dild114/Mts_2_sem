@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
@@ -20,8 +21,8 @@ public class UserController {
 
   @PostMapping("/signup")
   public String createUser(
-      @RequestParam(name = "name") String name,
-      @RequestParam(name = "password") String password,
+      @RequestParam String name,
+      @RequestParam String password,
       Model model) {
     if (name.isEmpty() || password.isEmpty()) {
       model.addAttribute("error", "Name or password cannot be empty.");
@@ -39,9 +40,10 @@ public class UserController {
 
   @DeleteMapping("/signup/:id")
   public String deleteUser(@RequestParam int id, Model model) {
+    UserId userId = new UserId(id);
     try {
       userService.deleteUser(new UserId(id));
-      model.addAttribute("id", id);
+      model.addAttribute("id", userId);
       return "deleteUsers";
     } catch (Exception e) {
       model.addAttribute("error", "Delete user failed.");

@@ -24,12 +24,12 @@ public class SiteController {
     this.siteService = siteService;
   }
 
-  @GetMapping("all/sites")
+  @GetMapping("/all/sites")
   public String getSites(Model model) {
     HashMap<String, Integer> sites = new HashMap<>();
     int ind = 0;
     for (var site : Sites.values()) {
-      sites.put(site.name(), ind++);
+      sites.put(site.getUrl(), ind++);
     }
     model.addAttribute("sites", sites);
     return "allSites";
@@ -47,7 +47,7 @@ public class SiteController {
     }
   }
 
-  @PostMapping("/site/:id")
+  @PostMapping("/site")
   public String addSite(@RequestParam int id, @RequestParam int userId, Model model) {
     try {
       UserId userId1 = new UserId(userId);
@@ -60,7 +60,7 @@ public class SiteController {
     }
   }
 
-  @DeleteMapping("/site/:id")
+  @DeleteMapping("/site")
   public String deleteSite(@RequestParam int id, @RequestParam int userId, Model model) {
     try {
       UserId userId1 = new UserId(userId);

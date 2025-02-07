@@ -15,9 +15,11 @@ import java.util.List;
 public class CategoryService {
   private static final Logger LOG = LoggerFactory.getLogger(ArticleController.class);
   private final CategoryRepository categoryRepository;
+
   public CategoryService(CategoryRepository categoryRepository) {
     this.categoryRepository = categoryRepository;
   }
+
   public List<Category> findAll(UserId userId) {
     return categoryRepository.findAll(userId);
   }

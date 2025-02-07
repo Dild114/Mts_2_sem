@@ -17,7 +17,7 @@ public class UserService {
 
   public UserId createUser(String userName, String password) {
     LOG.info("Creating user {}", userName);
-    return null;
+    return new UserId(-1);
   }
 
   public void deleteUser(UserId userId) {

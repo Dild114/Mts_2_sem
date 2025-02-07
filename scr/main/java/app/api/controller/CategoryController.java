@@ -49,7 +49,7 @@ public class CategoryController {
     }
   }
 
-  @DeleteMapping("/category/:id")
+  @DeleteMapping("/category")
   public String deleteCategory(@RequestParam int id, @RequestParam int userId, Model model) {
     try {
       categoryService.delete(new CategoryId(id), new UserId(userId));
