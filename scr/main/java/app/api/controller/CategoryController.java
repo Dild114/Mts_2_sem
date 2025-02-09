@@ -6,6 +6,9 @@ import app.api.entity.CategoryId;
 import app.api.entity.UserId;
 import app.api.service.CategoryService;
 
+import app.api.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +22,7 @@ import java.util.List;
 @Controller
 public class CategoryController {
   public CategoryService categoryService;
+  private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
 
   @Autowired
   public CategoryController(CategoryService categoryService) {
@@ -27,11 +31,13 @@ public class CategoryController {
 
   @GetMapping("/categories")
   public String getMyCategories(@RequestParam int userId, Model model) {
+    LOG.info("getMyCategories");
     try {
       List<Category> categories = categoryService.findAll(new UserId(userId));
       model.addAttribute("categories", categories);
       return "Mycategories";
     } catch (Exception e) {
+      LOG.error("getMyCategories failed");
       model.addAttribute("error", "getMyCategories failed");
       return "error";
     }
@@ -39,11 +45,13 @@ public class CategoryController {
 
   @PostMapping("/category")
   public String addCategory(@RequestParam String name, @RequestParam int userId, Model model) {
+    LOG.info("addCategory");
     try {
       categoryService.create(name, new UserId(userId));
       model.addAttribute("categories", categoryService.findAll(new UserId(userId)));
       return "Mycategories";
     } catch (Exception e) {
+      LOG.error("addCategory failed");
       model.addAttribute("error", "addCategory failed");
       return "error";
     }
@@ -51,11 +59,13 @@ public class CategoryController {
 
   @DeleteMapping("/category")
   public String deleteCategory(@RequestParam int id, @RequestParam int userId, Model model) {
+    LOG.info("deleteCategory");
     try {
       categoryService.delete(new CategoryId(id), new UserId(userId));
       model.addAttribute("categories", categoryService.findAll(new UserId(userId)));
       return "Mycategories";
     } catch (Exception e) {
+      LOG.error("deleteCategory failed");
       model.addAttribute("error", "deleteCategory failed");
       return "error";
     }

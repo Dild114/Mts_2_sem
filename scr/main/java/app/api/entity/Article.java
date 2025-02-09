@@ -22,5 +22,4 @@ public class Article {
     this.url = url;
     this.idCategory = idCategory;
   }
-
 }

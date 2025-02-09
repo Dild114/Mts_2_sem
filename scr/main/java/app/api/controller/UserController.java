@@ -2,6 +2,8 @@ package app.api.controller;
 
 import app.api.entity.UserId;
 import app.api.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class UserController {
   public final UserService userService;
+  private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
 
   @Autowired
   public UserController(UserService userService) {
@@ -24,6 +27,7 @@ public class UserController {
       @RequestParam String name,
       @RequestParam String password,
       Model model) {
+    LOG.info("createUser");
     if (name.isEmpty() || password.isEmpty()) {
       model.addAttribute("error", "Name or password cannot be empty.");
       return "error";
@@ -40,12 +44,14 @@ public class UserController {
 
   @DeleteMapping("/signup/:id")
   public String deleteUser(@RequestParam int id, Model model) {
+    LOG.info("deleteUser");
     UserId userId = new UserId(id);
     try {
       userService.deleteUser(new UserId(id));
       model.addAttribute("id", userId);
       return "deleteUsers";
     } catch (Exception e) {
+      LOG.error("deleteUser", e);
       model.addAttribute("error", "Delete user failed.");
       return "error";
     }

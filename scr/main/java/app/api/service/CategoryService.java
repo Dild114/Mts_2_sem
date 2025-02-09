@@ -21,6 +21,7 @@ public class CategoryService {
   }
 
   public List<Category> findAll(UserId userId) {
+    LOG.info("Finding all categories");
     return categoryRepository.findAll(userId);
   }
   public Category findById(CategoryId id) {
