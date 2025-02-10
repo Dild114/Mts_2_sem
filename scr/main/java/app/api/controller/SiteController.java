@@ -4,84 +4,72 @@ import app.api.entity.Site;
 import app.api.entity.SiteId;
 import app.api.entity.UserId;
 import app.api.service.SiteService;
-import app.api.service.UserService;
-import lombok.extern.java.Log;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
-import org.springframework.stereotype.Controller;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.List;
 
-@Controller
+@Slf4j
+@RequestMapping("/site")
+@RestController
 public class SiteController {
   public final SiteService siteService;
-  private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
 
-  @Autowired
+
   public SiteController(SiteService siteService) {
     this.siteService = siteService;
   }
 
-  @GetMapping("/all/sites")
-  public String getSites(Model model) {
-    LOG.info("Getting sites");
+  @GetMapping("/all")
+  public ResponseEntity<?> getSites() {
+    log.info("Getting all sites");
     HashMap<String, Integer> sites = new HashMap<>();
     int ind = 0;
     for (var site : Sites.values()) {
       sites.put(site.getUrl(), ind++);
     }
-    model.addAttribute("sites", sites);
-    return "allSites";
+    return ResponseEntity.ok(sites);
   }
 
-  @GetMapping("/sites")
-  public String mySites(@RequestParam int userId, Model model) {
-    LOG.info("Getting sites");
-    try {
-      List<Site> sites = siteService.getSites(new UserId(userId));
-      model.addAttribute("sites", sites);
-      return "mySites";
-    } catch (Exception e) {
-      LOG.error("Getting sites failed", e);
-      model.addAttribute("error", "Get sites error");
-      return "error";
-    }
+  @GetMapping
+  public ResponseEntity<?> mySites(@RequestBody int userId) {
+    log.info("Getting sites");
+    List<Site> sites = siteService.getSites(new UserId(userId));
+    return ResponseEntity.ok(sites);
   }
 
-  @PostMapping("/site")
-  public String addSite(@RequestParam int id, @RequestParam int userId, Model model) {
-    LOG.info("Adding site");
+  @PostMapping("/{id}")
+  public ResponseEntity<?> addSite(@PathVariable int id, @RequestBody int userId) {
+    log.info("Adding site");
     try {
       UserId userId1 = new UserId(userId);
       siteService.addSite(new SiteId(id), userId1);
-      model.addAttribute("success", "Site added successfully");
-      return "addSite";
+      return ResponseEntity.ok("site added with id: " + id);
     } catch (Exception e) {
-      LOG.error("Adding site failed", e);
-      model.addAttribute("error", "Add site failed");
-      return "error";
+      log.error("Adding site failed: ", e);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
   }
 
-  @DeleteMapping("/site")
-  public String deleteSite(@RequestParam int id, @RequestParam int userId, Model model) {
-    LOG.info("Deleting site");
+  @DeleteMapping("/{id}")
+  public ResponseEntity<?> deleteSite(@PathVariable int id, @RequestBody int userId) {
+    log.info("Deleting site");
     try {
       UserId userId1 = new UserId(userId);
       siteService.deleteSite(new SiteId(id), userId1);
-      model.addAttribute("success", "Site delete successfully");
-      return "addSite";
+      return ResponseEntity.ok("site deleted with id: " + id);
     } catch (Exception e) {
-      LOG.error("Deleting site failed", e);
-      model.addAttribute("error", "Delete site failed");
-      return "error";
+      log.error("Deleting site failed", e);
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
   }
 }

@@ -6,68 +6,57 @@ import app.api.entity.CategoryId;
 import app.api.entity.UserId;
 import app.api.service.CategoryService;
 
-import app.api.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Controller
+@Slf4j
+@RestController
+@RequestMapping("/category")
 public class CategoryController {
   public CategoryService categoryService;
-  private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
 
-  @Autowired
   public CategoryController(CategoryService categoryService) {
     this.categoryService = categoryService;
   }
 
-  @GetMapping("/categories")
-  public String getMyCategories(@RequestParam int userId, Model model) {
-    LOG.info("getMyCategories");
-    try {
-      List<Category> categories = categoryService.findAll(new UserId(userId));
-      model.addAttribute("categories", categories);
-      return "Mycategories";
-    } catch (Exception e) {
-      LOG.error("getMyCategories failed");
-      model.addAttribute("error", "getMyCategories failed");
-      return "error";
-    }
+  @GetMapping
+  public ResponseEntity<List<Category>> getMyCategories(@RequestBody long userId) {
+    log.info("getMyCategories");
+    List<Category> categories = categoryService.findAll(new UserId(userId));
+    return ResponseEntity.ok(categories);
   }
 
-  @PostMapping("/category")
-  public String addCategory(@RequestParam String name, @RequestParam int userId, Model model) {
-    LOG.info("addCategory");
+  @PostMapping
+  public ResponseEntity<?> addCategory(@RequestBody String name, @RequestBody int userId) {
+    log.info("addCategory");
     try {
       categoryService.create(name, new UserId(userId));
-      model.addAttribute("categories", categoryService.findAll(new UserId(userId)));
-      return "Mycategories";
+      return ResponseEntity.status(HttpStatus.CREATED).build();
     } catch (Exception e) {
-      LOG.error("addCategory failed");
-      model.addAttribute("error", "addCategory failed");
-      return "error";
+      log.error("addCategory failed: {}", e.getMessage());
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
   }
 
-  @DeleteMapping("/category")
-  public String deleteCategory(@RequestParam int id, @RequestParam int userId, Model model) {
-    LOG.info("deleteCategory");
+  @DeleteMapping("/{id}")
+  public ResponseEntity<?> deleteCategory(@PathVariable long id, @RequestBody int userId) {
+    log.info("deleteCategory");
     try {
       categoryService.delete(new CategoryId(id), new UserId(userId));
-      model.addAttribute("categories", categoryService.findAll(new UserId(userId)));
-      return "Mycategories";
+      return ResponseEntity.status(HttpStatus.CREATED).build();
     } catch (Exception e) {
-      LOG.error("deleteCategory failed");
-      model.addAttribute("error", "deleteCategory failed");
-      return "error";
+      log.error("deleteCategory failed: {}", e.getMessage());
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
   }
 }

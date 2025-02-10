@@ -9,12 +9,11 @@ import app.api.entity.Site;
 import app.api.entity.SiteId;
 import app.api.entity.User;
 import app.api.entity.UserId;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
 
-public interface dbRepository {
+public interface DbRepository {
   ArticleId generateIdArticle();
   Map<Article, Category> getArticles(UserId userId);
   CategoryId generateIdCategory();

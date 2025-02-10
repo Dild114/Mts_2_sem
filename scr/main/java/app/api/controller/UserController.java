@@ -2,58 +2,53 @@ package app.api.controller;
 
 import app.api.entity.UserId;
 import app.api.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@Slf4j
+@RequestMapping("/signup")
+@RestController
 public class UserController {
   public final UserService userService;
-  private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
 
-  @Autowired
   public UserController(UserService userService) {
     this.userService = userService;
   }
 
-  @PostMapping("/signup")
-  public String createUser(
-      @RequestParam String name,
-      @RequestParam String password,
-      Model model) {
-    LOG.info("createUser");
+  @PostMapping
+  public ResponseEntity<?> createUser(
+      @RequestBody String name,
+      @RequestBody String password) {
+    log.info("createUser");
     if (name.isEmpty() || password.isEmpty()) {
-      model.addAttribute("error", "Name or password cannot be empty.");
-      return "error";
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
     try {
       UserId userId = userService.createUser(name, password);
-      model.addAttribute("id", userId);
-      return "register";
+      return ResponseEntity.ok(userId);
     } catch (Exception e) {
-      model.addAttribute("error", "Create user failed.");
-      return "error";
+      log.error("createUser failed", e);
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
   }
 
-  @DeleteMapping("/signup/:id")
-  public String deleteUser(@RequestParam int id, Model model) {
-    LOG.info("deleteUser");
+  @DeleteMapping("/{id}")
+  public ResponseEntity<?> deleteUser(@PathVariable int id) {
+    log.info("deleteUser");
     UserId userId = new UserId(id);
     try {
       userService.deleteUser(new UserId(id));
-      model.addAttribute("id", userId);
-      return "deleteUsers";
+      return ResponseEntity.ok(userId);
     } catch (Exception e) {
-      LOG.error("deleteUser", e);
-      model.addAttribute("error", "Delete user failed.");
-      return "error";
+      log.error("deleteUser", e);
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
   }
 }

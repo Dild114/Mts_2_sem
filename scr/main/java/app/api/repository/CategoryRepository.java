@@ -14,7 +14,7 @@ public interface CategoryRepository {
 
   Category findById(CategoryId id);
 
-  void delete(CategoryId id, UserId userId);
+  CategoryId delete(CategoryId id, UserId userId);
 
   boolean create(Category category);
 }

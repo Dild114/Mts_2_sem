@@ -1,19 +1,17 @@
 package app.api.service;
 
-import app.api.controller.ArticleController;
 import app.api.entity.Category;
 import app.api.entity.CategoryId;
 import app.api.entity.UserId;
 import app.api.repository.CategoryRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 public class CategoryService {
-  private static final Logger LOG = LoggerFactory.getLogger(ArticleController.class);
   private final CategoryRepository categoryRepository;
 
   public CategoryService(CategoryRepository categoryRepository) {
@@ -21,19 +19,19 @@ public class CategoryService {
   }
 
   public List<Category> findAll(UserId userId) {
-    LOG.info("Finding all categories");
+    log.info("Finding all categories");
     return categoryRepository.findAll(userId);
   }
   public Category findById(CategoryId id) {
-    LOG.info("findById({})", id);
+    log.info("findById({})", id);
    return null;
   }
   public void delete(CategoryId id, UserId userId) {
-    LOG.info("Deleting Category with id {}", id);
+    log.info("Deleting Category with id {}", id);
   }
 
   public CategoryId create(String name, UserId userId) {
-    LOG.info("Creating Category with name {}", name);
+    log.info("Creating Category with name {}", name);
     return null;
   }
 }
