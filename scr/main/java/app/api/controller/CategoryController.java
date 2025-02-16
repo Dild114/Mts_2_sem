@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Slf4j
-@Tag(name = "Categories API", description = "Управление категориями")
 @RestController
 public class CategoryController implements CategoryControllerInterface {
 

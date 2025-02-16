@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 @Slf4j
-@Tag(name = "Article API", description = "Управление статьями")
 @RestController
 public class ArticleController implements ArticleControllerInterface {
 

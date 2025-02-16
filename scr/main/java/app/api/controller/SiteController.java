@@ -15,7 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 
 @Slf4j
-@Tag(name = "Site API", description = "Управление сайтами")
 @RestController
 public class SiteController implements SiteControllerInterface {
 
@@ -30,7 +29,6 @@ public class SiteController implements SiteControllerInterface {
     log.info("Getting all sites");
     HashMap<String, Integer> sites = new HashMap<>();
     int ind = 0;
-    // Assuming Sites.values() is available here
     for (var site : Sites.values()) {
       sites.put(site.getUrl(), ind++);
     }
