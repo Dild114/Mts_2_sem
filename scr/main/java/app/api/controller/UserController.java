@@ -1,36 +1,26 @@
 package app.api.controller;
 
+import app.api.controller.interfaceDrivenControllers.UserControllerInterface;
 import app.api.entity.User;
 import app.api.entity.UserId;
 import app.api.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
-@RequestMapping("/signup")
 @RestController
-public class UserController {
-  public final UserService userService;
+public class UserController implements UserControllerInterface {
+
+  private final UserService userService;
 
   public UserController(UserService userService) {
     this.userService = userService;
   }
 
-
-
-  @PostMapping
-  public ResponseEntity<?> createUser(
-      @RequestBody String name,
-      @RequestBody String password) {
+  @Override
+  public ResponseEntity<?> createUser(String name, String password) {
     log.info("createUser");
     if (name.isEmpty() || password.isEmpty()) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -44,24 +34,21 @@ public class UserController {
     }
   }
 
-  @DeleteMapping("/{id}")
-  public ResponseEntity<?> deleteUser(@PathVariable int id) {
+  @Override
+  public ResponseEntity<?> deleteUser(int id) {
     log.info("deleteUser");
     UserId userId = new UserId(id);
     try {
-      userService.deleteUser(new UserId(id));
-      return ResponseEntity.ok(userId);
+      userService.deleteUser(userId);
+      return ResponseEntity.noContent().build();
     } catch (Exception e) {
       log.error("deleteUser failed", e);
       return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
   }
 
-  @PutMapping("/{id}")
-  public ResponseEntity<?> updateUserData(
-      @PathVariable int id,
-      @RequestBody String name,
-      @RequestBody String password) {
+  @Override
+  public ResponseEntity<?> updateUserData(int id, String name, String password) {
     log.info("Update user data with id: {}", id);
     UserId userId = new UserId(id);
     User user = new User(name, password);
@@ -74,11 +61,10 @@ public class UserController {
     }
   }
 
-  @PatchMapping("/{id}")
-  public ResponseEntity<?> updateUserName(@PathVariable int id, @RequestBody String name) {
+  @Override
+  public ResponseEntity<?> updateUserName(int id, String name) {
     log.info("update username with id: {}", id);
     UserId userId = new UserId(id);
-
     try {
       userService.updateUserName(userId, name);
       return ResponseEntity.ok("update Name successful");

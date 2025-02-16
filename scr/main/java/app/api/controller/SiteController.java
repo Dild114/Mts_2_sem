@@ -4,71 +4,66 @@ import app.api.entity.Site;
 import app.api.entity.SiteId;
 import app.api.entity.UserId;
 import app.api.service.SiteService;
+import app.api.controller.interfaceDrivenControllers.SiteControllerInterface;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
 
 @Slf4j
-@RequestMapping("/site")
+@Tag(name = "Site API", description = "Управление сайтами")
 @RestController
-public class SiteController {
-  public final SiteService siteService;
+public class SiteController implements SiteControllerInterface {
 
+  private final SiteService siteService;
 
   public SiteController(SiteService siteService) {
     this.siteService = siteService;
   }
 
-  @GetMapping("/all")
+  @Override
   public ResponseEntity<?> getSites() {
     log.info("Getting all sites");
     HashMap<String, Integer> sites = new HashMap<>();
     int ind = 0;
+    // Assuming Sites.values() is available here
     for (var site : Sites.values()) {
       sites.put(site.getUrl(), ind++);
     }
     return ResponseEntity.ok(sites);
   }
 
-  @GetMapping
-  public ResponseEntity<?> mySites(@RequestBody int userId) {
-    log.info("Getting sites");
+  @Override
+  public ResponseEntity<?> mySites(int userId) {
+    log.info("Getting sites for userId: {}", userId);
     List<Site> sites = siteService.getSites(new UserId(userId));
     return ResponseEntity.ok(sites);
   }
 
-  @PatchMapping ("/{id}")
-  public ResponseEntity<?> addSite(@PathVariable int id, @RequestBody int userId) {
-    log.info("Adding site");
+  @Override
+  public ResponseEntity<?> addSite(int siteId, int userId) {
+    log.info("Adding site for userId: {}", userId);
     try {
       UserId userId1 = new UserId(userId);
-      siteService.addSite(new SiteId(id), userId1);
-      return ResponseEntity.ok("site added with id: " + id);
+      siteService.addSite(new SiteId(siteId), userId1);
+      return ResponseEntity.ok("site added with id: " + siteId);
     } catch (Exception e) {
       log.error("Adding site failed: ", e);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
   }
 
-  @DeleteMapping("/{id}")
-  public ResponseEntity<?> deleteSite(@PathVariable int id, @RequestBody int userId) {
-    log.info("Deleting site");
+  @Override
+  public ResponseEntity<?> deleteSite(int siteId, int userId) {
+    log.info("Deleting site for userId: {}", userId);
     try {
       UserId userId1 = new UserId(userId);
-      siteService.deleteSite(new SiteId(id), userId1);
-      return ResponseEntity.ok("site deleted with id: " + id);
+      siteService.deleteSite(new SiteId(siteId), userId1);
+      return ResponseEntity.ok("site deleted with id: " + siteId);
     } catch (Exception e) {
       log.error("Deleting site failed", e);
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
