@@ -1,5 +1,6 @@
 package app.api.controller.interfaceDrivenControllers;
 
+import app.api.controller.UserRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -18,10 +19,7 @@ public interface UserControllerInterface {
   @PostMapping
   ResponseEntity<?> createUser(
       @Parameter(description = "Имя пользователя", required = true)
-      @RequestBody String name,
-
-      @Parameter(description = "Пароль пользователя", required = true)
-      @RequestBody String password
+      @RequestBody UserRequest userRequest
   );
 
   @Operation(summary = "Удалить пользователя по id")
@@ -41,11 +39,8 @@ public interface UserControllerInterface {
       @Parameter(description = "ID пользователя", example = "123")
       @PathVariable int id,
 
-      @Parameter(description = "Имя пользователя", required = true)
-      @RequestBody String name,
-
-      @Parameter(description = "Пароль пользователя", required = true)
-      @RequestBody String password
+      @Parameter(description = "Пользователь", required = true)
+      @RequestBody UserRequest userRequest
   );
 
   @Operation(summary = "Обновить имя пользователя")

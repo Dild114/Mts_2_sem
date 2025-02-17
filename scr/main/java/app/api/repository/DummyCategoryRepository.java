@@ -9,9 +9,11 @@ import java.util.List;
 
 @Repository
 public class DummyCategoryRepository implements CategoryRepository {
+  int countId= 0;
   @Override
   public CategoryId getCategoryId() {
-    return null;
+    countId += 1;
+    return new CategoryId(countId);
   }
 
   @Override

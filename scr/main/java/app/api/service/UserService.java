@@ -32,7 +32,7 @@ public class UserService {
   }
 
   public void updateUserName(UserId userId, String newName) {
-    log.info("update Username with id: " + userId.id());
+    log.info("update Username with id: {}", userId.id());
     userRepository.updateNameAccount(userId, newName);
   }
 }

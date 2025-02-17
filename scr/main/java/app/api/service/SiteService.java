@@ -19,13 +19,16 @@ public class SiteService {
   }
 
   public List<Site> getSites(UserId userId) {
+    List<Site> sites = siteRepository.findAllSite(userId);
     log.info("Get sites");
-    return null;
+    return sites;
   }
   public void deleteSite(SiteId siteId, UserId userId) {
+    siteRepository.deleteSiteById(siteId, userId);
     log.info("Delete site {}", siteId);
   }
   public void addSite(SiteId siteId, UserId userId) {
+    siteRepository.add(siteId, userId);
     log.info("Add site {}", siteId);
   }
 }
