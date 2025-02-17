@@ -49,7 +49,9 @@ class UserControllerTest {
   void deleteUser() throws Exception {
     User mockUser = new User("testName", "testPassword" );
     mockUser.setUserId(new UserId(1));
+
     when(userService.createUser("testName", "testPassword")).thenReturn(mockUser.getUserId());
+
     mockMvc.perform(post("/signup")
             .contentType(MediaType.APPLICATION_JSON)
             .content("{\"name\": \"testName\", \"password\": \"testPassword\"}"))
