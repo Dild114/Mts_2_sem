@@ -1,6 +1,6 @@
 package app.e2e;
-import app.api.controller.CategoryRequest;
-import app.api.controller.UserRequest;
+import app.api.controller.CategoriesRequest;
+import app.api.controller.UsersRequest;
 import app.api.entity.Article;
 import app.api.entity.Category;
 import app.api.entity.CategoryId;
@@ -43,11 +43,11 @@ public class E2eTest {
 
   @Test
   void e2e() {
-    UserRequest userRequest = new UserRequest("John", "qwert");
-    UserRequest userRequest2 = new UserRequest("John", "qwert");
+    UsersRequest usersRequest = new UsersRequest("John", "qwert");
+    UsersRequest usersRequest2 = new UsersRequest("John", "qwert");
     String url = "http://localhost:" + port;
-    ResponseEntity<UserId> responseEntity = restTemplate.postForEntity(url + "/signup", userRequest, UserId.class);
-    ResponseEntity<UserId> responseEntity2 = restTemplate.postForEntity(url + "/signup", userRequest2, UserId.class);
+    ResponseEntity<UserId> responseEntity = restTemplate.postForEntity(url + "/signup", usersRequest, UserId.class);
+    ResponseEntity<UserId> responseEntity2 = restTemplate.postForEntity(url + "/signup", usersRequest2, UserId.class);
 
     // Create user
     assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
@@ -67,8 +67,8 @@ public class E2eTest {
 
 
     // add category
-    CategoryRequest categoryRequest = new CategoryRequest("qwerty", new UserId(1));
-    ResponseEntity<CategoryId> responseEntity5 = restTemplate.postForEntity(url + "/category", categoryRequest, CategoryId.class);
+    CategoriesRequest categoriesRequest = new CategoriesRequest("qwerty", new UserId(1));
+    ResponseEntity<CategoryId> responseEntity5 = restTemplate.postForEntity(url + "/category", categoriesRequest, CategoryId.class);
     assertEquals(HttpStatus.OK, responseEntity5.getStatusCode());
     assertEquals(responseEntity5.getBody().id(), 1);
 

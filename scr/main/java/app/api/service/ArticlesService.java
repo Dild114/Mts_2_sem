@@ -11,11 +11,11 @@ import java.util.Map;
 
 @Slf4j
 @Service
-public class ArticleService {
+public class ArticlesService {
   public ArticleRepository articleRepository;
 
 
-  public ArticleService(ArticleRepository articleRepository) {
+  public ArticlesService(ArticleRepository articleRepository) {
     this.articleRepository = articleRepository;
   }
 

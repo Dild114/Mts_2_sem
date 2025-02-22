@@ -3,7 +3,7 @@ package app.api.controller;
 
 import app.api.entity.User;
 import app.api.entity.UserId;
-import app.api.service.UserService;
+import app.api.service.UsersService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -21,14 +21,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.springframework.http.MediaType;
 
 
-@WebMvcTest(UserController.class)
+@WebMvcTest(UsersController.class)
 @ActiveProfiles("test")
-class UserControllerTest {
+class UsersControllerTest {
   @Autowired
   private MockMvc mockMvc;
 
   @MockBean
-  private UserService userService;
+  private UsersService usersService;
 
 
 
@@ -36,7 +36,7 @@ class UserControllerTest {
   void createUser() throws Exception {
     User mockUser = new User("testName", "testPassword" );
     mockUser.setUserId(new UserId(1));
-    when(userService.createUser("testName", "testPassword")).thenReturn(mockUser.getUserId());
+    when(usersService.createUser("testName", "testPassword")).thenReturn(mockUser.getUserId());
     mockMvc.perform(post("/signup")
             .contentType(MediaType.APPLICATION_JSON)
             .content("{\"name\": \"testName\", \"password\": \"testPassword\"}"))
@@ -50,7 +50,7 @@ class UserControllerTest {
     User mockUser = new User("testName", "testPassword" );
     mockUser.setUserId(new UserId(1));
 
-    when(userService.createUser("testName", "testPassword")).thenReturn(mockUser.getUserId());
+    when(usersService.createUser("testName", "testPassword")).thenReturn(mockUser.getUserId());
 
     mockMvc.perform(post("/signup")
             .contentType(MediaType.APPLICATION_JSON)
@@ -65,7 +65,7 @@ class UserControllerTest {
   void updateUser() throws Exception {
     User mockUser = new User("testName", "testPassword" );
     mockUser.setUserId(new UserId(1));
-    when(userService.createUser("testName", "testPassword")).thenReturn(mockUser.getUserId());
+    when(usersService.createUser("testName", "testPassword")).thenReturn(mockUser.getUserId());
 
     mockMvc.perform(post("/signup")
             .contentType(MediaType.APPLICATION_JSON)

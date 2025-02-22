@@ -1,4 +1,4 @@
-package app.api.controller.interfaceDrivenControllers;
+package app.api.controller.interfacedrivencontrollers;
 
 import app.api.entity.Article;
 import app.api.entity.Category;

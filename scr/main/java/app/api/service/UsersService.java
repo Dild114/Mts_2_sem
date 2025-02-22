@@ -8,10 +8,10 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-public class UserService {
+public class UsersService {
   public UserRepository userRepository;
 
-  public UserService(UserRepository userRepository) {
+  public UsersService(UserRepository userRepository) {
     this.userRepository = userRepository;
   }
 
