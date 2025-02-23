@@ -1,5 +1,6 @@
 package app.config.aop;
 
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -12,11 +13,12 @@ import java.time.Instant;
 
 @Aspect
 @Component
+@Slf4j
 public class LoggingAspect {
 
   @Before("execution(* app.api.controller.*.*(..))")
   public void logBefore(JoinPoint joinPoint) {
-    System.out.println("Перед вызовом метода: " +
+    log.info("Перед вызовом метода: " +
         joinPoint.getSignature().getName());
   }
 
@@ -27,7 +29,7 @@ public class LoggingAspect {
     Object result = joinPoint.proceed();
     Instant endTime = Instant.now();
     Duration duration = Duration.between(startTime, endTime);
-    System.out.println("Метод " + joinPoint.getSignature().getName()
+    log.info("Метод " + joinPoint.getSignature().getName()
         + " выполнен за " + duration.toMillis() + " мс");
     return result;
   }
