@@ -4,6 +4,7 @@ import app.api.controller.interfacedrivencontrollers.UserControllerInterface;
 import app.api.entity.User;
 import app.api.entity.UserId;
 import app.api.service.UsersService;
+import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 public class UsersController implements UserControllerInterface {
-
+  private final CircuitBreaker circuitBreaker = CircuitBreaker.ofDefaults("apiCircuitBreaker");
   private final UsersService usersService;
 
   public UsersController(UsersService usersService) {
@@ -28,10 +29,10 @@ public class UsersController implements UserControllerInterface {
     }
     try {
       UserId userId = usersService.createUser(usersRequest.name(), usersRequest.password());
-      return ResponseEntity.status(HttpStatus.CREATED).body(userId);
+      return circuitBreaker.executeSupplier(() -> ResponseEntity.status(HttpStatus.CREATED).body(userId));
     } catch (Exception e) {
       log.error("createUser failed", e);
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+      return circuitBreaker.executeSupplier(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
     }
   }
 
@@ -41,24 +42,27 @@ public class UsersController implements UserControllerInterface {
     UserId userId = new UserId(id);
     try {
       usersService.deleteUser(userId);
-      return ResponseEntity.noContent().build();
+      return circuitBreaker.executeSupplier(() -> ResponseEntity.noContent().build());
     } catch (Exception e) {
       log.error("deleteUser failed", e);
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+      return circuitBreaker.executeSupplier(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
   }
 
   @Override
   public ResponseEntity<?> updateUserData(int id, UsersRequest usersRequest) {
+    if (usersRequest == null || usersRequest.name() == null || usersRequest.name().isEmpty()) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
     log.info("Update user data with id: {}", id);
     UserId userId = new UserId(id);
     User user = new User(usersRequest.name(), usersRequest.password());
     try {
       usersService.updateUserData(userId, user);
-      return ResponseEntity.ok("update successful");
+      return circuitBreaker.executeSupplier(() -> ResponseEntity.ok("update successful"));
     } catch (Exception e) {
       log.error("update user failed ", e);
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+      return circuitBreaker.executeSupplier(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
   }
 
@@ -68,10 +72,10 @@ public class UsersController implements UserControllerInterface {
     UserId userId = new UserId(id);
     try {
       usersService.updateUserName(userId, name);
-      return ResponseEntity.noContent().build();
+      return circuitBreaker.executeSupplier(() -> ResponseEntity.noContent().build());
     } catch (Exception e) {
       log.error("update UserName failed", e);
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+      return circuitBreaker.executeSupplier(() -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
     }
   }
 }

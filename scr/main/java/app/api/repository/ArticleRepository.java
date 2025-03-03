@@ -11,4 +11,6 @@ public interface ArticleRepository {
   ArticleId generateId();
 
   Map<Article, Category> getArticles(UserId userId);
+  String getRandomUrlRest();
+  String getRandomUrlRestWebClient();
 }

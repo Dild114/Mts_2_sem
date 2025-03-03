@@ -2,8 +2,12 @@ package app.api.service;
 
 import app.api.entity.User;
 import app.api.entity.UserId;
+import app.api.exception.UserAlreadyExistsException;
 import app.api.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -15,10 +19,16 @@ public class UsersService {
     this.userRepository = userRepository;
   }
 
+  // Обеспечение создания пользователя
+  @Retryable(retryFor = IllegalArgumentException.class, maxAttempts = 5, backoff = @Backoff(delay = 10000))
   public UserId createUser(String userName, String password) {
     log.info("Creating user {}", userName);
     User user = new User(userName, password);
-    return userRepository.createAccount(user);
+    try {
+      return userRepository.createAccount(user);
+    } catch (Exception e) {
+      throw new UserAlreadyExistsException("wrong data");
+    }
   }
 
   public void deleteUser(UserId userId) {

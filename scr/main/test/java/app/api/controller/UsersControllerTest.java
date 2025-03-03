@@ -1,14 +1,17 @@
 package app.api.controller;
 
 
+import app.Application;
 import app.api.entity.User;
 import app.api.entity.UserId;
 import app.api.service.UsersService;
+import app.config.security.SecurityConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -23,6 +26,7 @@ import org.springframework.http.MediaType;
 
 @WebMvcTest(UsersController.class)
 @ActiveProfiles("test")
+@ContextConfiguration(classes = {Application.class, SecurityConfig.class })
 class UsersControllerTest {
   @Autowired
   private MockMvc mockMvc;
@@ -35,6 +39,7 @@ class UsersControllerTest {
   @Test
   void createUser() throws Exception {
     User mockUser = new User("testName", "testPassword" );
+    UsersRequest mockUsersRequest = new UsersRequest("testName", "testPassword");
     mockUser.setUserId(new UserId(1));
     when(usersService.createUser("testName", "testPassword")).thenReturn(mockUser.getUserId());
     mockMvc.perform(post("/signup")
@@ -79,11 +84,11 @@ class UsersControllerTest {
 
   @Test
   void createUserException() throws Exception {
-    User mockUser = new User("", "testPassword" );
+    User mockUser = new User(null, "testPassword" );
     mockUser.setUserId(new UserId(1));
     mockMvc.perform(post("/signup")
             .contentType(MediaType.APPLICATION_JSON)
-            .content("{\"name\": \"testName\", \"password\": \"testPassword\"}"))
+            .content("{\"name\": \"\", \"password\": \"testPassword\"}"))
         .andExpect(status().isBadRequest());
   }
 }
