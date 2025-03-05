@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 @Service
 public class SitesService {
-  private final Set<Long> processedIds = ConcurrentHashMap.newKeySet();
+  private final Set<Integer> processedIds = ConcurrentHashMap.newKeySet();
   private final SiteRepository siteRepository;
 
   public SitesService(SiteRepository siteRepository) {

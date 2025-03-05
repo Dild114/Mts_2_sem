@@ -25,24 +25,24 @@ public class UsersService {
     log.info("Creating user {}", userName);
     User user = new User(userName, password);
     try {
-      return userRepository.createAccount(user);
+      return userRepository.createUser(user);
     } catch (Exception e) {
       throw new UserAlreadyExistsException("wrong data");
     }
   }
 
   public void deleteUser(UserId userId) {
-    userRepository.deleteAccount(userId);
+    userRepository.deleteUser(userId);
     log.info("Deleting user {}", userId);
   }
 
   public void updateUserData(UserId userId, User user) {
     log.info("update user Data in UserService");
-    userRepository.updateAccount(userId, user);
+    userRepository.updateUser(userId, user);
   }
 
   public void updateUserName(UserId userId, String newName) {
     log.info("update Username with id: {}", userId.id());
-    userRepository.updateNameAccount(userId, newName);
+    userRepository.updateNameUser(userId, newName);
   }
 }

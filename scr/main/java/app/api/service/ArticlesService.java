@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -20,8 +21,8 @@ public class ArticlesService {
     this.articleRepository = articleRepository;
   }
 
-  public Map<Article, Category> getArticles(UserId userId) {
-    Map<Article, Category> articles = articleRepository.getArticles(userId);
+  public List<Article> getArticles(UserId userId) {
+    List<Article> articles = articleRepository.getArticles(userId);
     log.info("getArticles userId={}", userId);
     return articles;
   }

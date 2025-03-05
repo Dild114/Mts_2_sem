@@ -46,11 +46,11 @@ public class SitesController implements SiteControllerInterface {
   }
 
   @Override
-  public ResponseEntity<SiteId> addSite(int siteId, @RequestBody int userId) {
+  public ResponseEntity<Void> addSite(int siteId, UserId userId) {
     log.info("Adding site for userId: {}", userId);
     try {
-      sitesService.addSite(new SiteId(siteId), new UserId(userId));
-      return circuitBreaker.executeSupplier(() -> rateLimiter.executeSupplier(() -> ResponseEntity.status(HttpStatus.CREATED).body(new SiteId(siteId))));
+      sitesService.addSite(new SiteId(siteId), userId);
+      return circuitBreaker.executeSupplier(() -> rateLimiter.executeSupplier(() -> ResponseEntity.status(HttpStatus.CREATED)).build());
     } catch (Exception e) {
       log.error("Adding site failed: ", e);
       return circuitBreaker.executeSupplier(() -> rateLimiter.executeSupplier(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build()));

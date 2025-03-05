@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -26,11 +27,11 @@ public class ArticlesController implements ArticleControllerInterface {
 
 
   @Override
-  public ResponseEntity<Map<Article, Category>> getArticles(int id) {
+  public ResponseEntity<List<Article>> getArticles(int id) {
     log.info("Fetching articles for userId={}", id);
     try {
-      Map<Article, Category> articles = articlesService.getArticles(new UserId(id));
-      return rateLimiter.executeSupplier(() -> ResponseEntity.ok(articles));
+      List<Article> articles = articlesService.getArticles(new UserId(id));
+      return rateLimiter.executeSupplier(() -> ResponseEntity.ok().body(articles));
     } catch (Exception e) {
       log.error("get articles failed", e);
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

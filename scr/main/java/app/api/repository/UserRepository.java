@@ -5,9 +5,9 @@ import app.api.entity.UserId;
 
 public interface UserRepository {
   UserId generateId();
-  UserId createAccount(User user);
-  void deleteAccount(UserId userId);
-  void updateAccount(UserId userId, User user);
-  void updateNameAccount(UserId userID, String newName);
+  UserId createUser(User user);
+  void deleteUser(UserId userId);
+  void updateUser(UserId userId, User user);
+  void updateNameUser(UserId userID, String newName);
 
 }

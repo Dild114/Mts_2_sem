@@ -2,7 +2,6 @@ package app.api.repository;
 
 import app.api.entity.Article;
 import app.api.entity.ArticleId;
-import app.api.entity.Category;
 import app.api.entity.UserId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.Map;
+import java.util.List;
 
 @Repository
 public class ArticleRepositoryImpl implements ArticleRepository {
@@ -27,8 +26,8 @@ public class ArticleRepositoryImpl implements ArticleRepository {
   }
 
   @Override
-  public Map<Article, Category> getArticles(UserId userId) {
-    return Map.of();
+  public List<Article> getArticles(UserId userId) {
+    return List.of();
   }
 
   @Override

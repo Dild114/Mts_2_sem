@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.List;
 import java.util.Map;
 
 @Tag(name = "ArticleControllerInterface", description = "Управление статьями")
@@ -19,7 +20,7 @@ public interface ArticleControllerInterface {
   @ApiResponse(responseCode = "200", description = "Получены статьи пользователя")
   @ApiResponse(responseCode = "500", description = "Ошибка сервера")
   @GetMapping("/articles")
-  ResponseEntity<Map<Article, Category>> getArticles(
+  ResponseEntity<List<Article>> getArticles(
       @Parameter(description = "ID пользователя", required = true)
       @RequestBody int id
   );

@@ -36,12 +36,12 @@ public interface SiteControllerInterface {
   @ApiResponse(responseCode = "200", description = "Добавлен сайт пользователю")
   @ApiResponse(responseCode = "400", description = "Некорректные данные")
   @PatchMapping("/{siteId}")
-  ResponseEntity<SiteId> addSite(
+  ResponseEntity<Void> addSite(
       @Parameter(description = "ID сайта", required = true)
       @PathVariable int siteId,
 
       @Parameter(description = "ID пользователя", required = true)
-      @RequestBody int userId
+      @RequestBody UserId userId
   );
 
   @Operation(summary = "Удалить сайт пользователя")

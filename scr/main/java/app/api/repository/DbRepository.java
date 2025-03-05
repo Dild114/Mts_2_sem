@@ -11,11 +11,10 @@ import app.api.entity.User;
 import app.api.entity.UserId;
 
 import java.util.List;
-import java.util.Map;
 
-public interface DbRepository {
+public interface DbRepository extends CategoryRepository, SiteRepository, UserRepository {
   ArticleId generateIdArticle();
-  Map<Article, Category> getArticles(UserId userId);
+  List<Article> getArticles(UserId userId);
   CategoryId generateIdCategory();
   List<Category> findAllCategory(UserId userId);
   Category findCategoryById(CategoryId id);
@@ -29,8 +28,8 @@ public interface DbRepository {
   Site findSiteById(SiteId id);
 
   UserId generateUserId();
-  boolean createUser(User user);
-  boolean deleteUser(UserId userId);
+  UserId createUser(User user);
+  void deleteUser(UserId userId);
 
 
 
