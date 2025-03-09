@@ -1,29 +1,52 @@
 package app.api.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
 @Schema(name = "User", description = "Сущность пользователя")
+@Entity
+@Table(name = "users")
 public class User {
-  // пока что telegramId и email не нужен и мы его не будет использовать
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Schema(description = "ID пользователя", example = "123")
-  UserId userId;
-  @Schema(description = "Имя пользователя", example = "Nikolay")
-  String userName;
-  @Schema(description = "Пароль пользователя", example = "qwerty")
-  String password;
-  @Schema(description = "Email пользователя", example = "qwerty@qwerty.com")
-  String email;
-  @Schema(description = "Список категорий пользователя", example = "[ML,frontend, backend]")
-  List<Category> categories;
-  @Schema(description = "Список сайтов пользователя", example = "[https://habr.com/ru/articles/814061/, https://ru.wikipedia.org/wiki/]")
-  List<Site> sites;
+  private Long id;
 
-  public User(String userName, String password) {
-    this.userName = userName;
+  @NotNull()
+  @Schema(description = "Имя пользователя", example = "Nikolay")
+  private String name;
+
+  @NotNull()
+  @Schema(description = "Пароль пользователя", example = "qwerty")
+  private String password;
+
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Category> categories = new ArrayList<>();
+
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Site> sites = new ArrayList<>();
+
+  public User(String name, String password) {
+    this.name = name;
     this.password = password;
   }
+
+  protected User() {}
 }
+

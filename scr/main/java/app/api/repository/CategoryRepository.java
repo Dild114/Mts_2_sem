@@ -3,18 +3,17 @@ package app.api.repository;
 import app.api.entity.Category;
 import app.api.entity.CategoryId;
 import app.api.entity.UserId;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
-public interface CategoryRepository {
-  CategoryId getCategoryId();
+@Repository
+public interface CategoryRepository extends JpaRepository<Category, Long> {
 
-  List<Category> findAll(UserId userId);
-
-  Category findById(CategoryId id);
-
-  CategoryId delete(CategoryId id, UserId userId);
-
-  boolean create(Category category);
+  Optional<Category> findById(Long categoryId);
+  List<Category> findAllByUserId(Long userId);
+  void deleteAllByUserId(Long userId);
+  void deleteById(Long categoryId);
 }

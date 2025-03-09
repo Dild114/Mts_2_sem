@@ -2,6 +2,7 @@ package app.api.controller;
 
 import app.api.entity.Site;
 import app.api.entity.SiteId;
+import app.api.entity.User;
 import app.api.entity.UserId;
 import app.api.service.SitesService;
 import app.api.controller.interfacedrivencontrollers.SiteControllerInterface;
@@ -39,17 +40,17 @@ public class SitesController implements SiteControllerInterface {
   }
 
   @Override
-  public ResponseEntity<List<Site>> mySites(int userId) {
-    log.info("Getting sites for userId: {}", userId);
+  public ResponseEntity<List<Site>> mySites(User user) {
+    log.info("Getting sites for userId: {}", user.getId());
     List<Site> sites = sitesService.getSites(new UserId(userId));
     return circuitBreaker.executeSupplier(() -> rateLimiter.executeSupplier(() -> ResponseEntity.ok(sites)));
   }
 
   @Override
-  public ResponseEntity<Void> addSite(int siteId, UserId userId) {
-    log.info("Adding site for userId: {}", userId);
+  public ResponseEntity<Void> addSite(String url, User user) {
+    log.info("Adding site for userId: {}", user.getId());
     try {
-      sitesService.addSite(new SiteId(siteId), userId);
+      sitesService.addSite(new Site(url, user));
       return circuitBreaker.executeSupplier(() -> rateLimiter.executeSupplier(() -> ResponseEntity.status(HttpStatus.CREATED)).build());
     } catch (Exception e) {
       log.error("Adding site failed: ", e);

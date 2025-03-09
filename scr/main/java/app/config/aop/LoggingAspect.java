@@ -12,34 +12,37 @@
   import java.time.Duration;
   import java.time.Instant;
 
-  @Getter
-  @Slf4j
-  @Component
-  @Aspect
-  public class LoggingAspect {
-    private int counter;
+@Slf4j
+@Component
+@Aspect
+public class LoggingAspect {
+  private int counter;
 
-    public void resetCounter() {
-      counter = 0;
-    }
-
-    @Before("execution(* app.api.controller.*.*(..))")
-    public void logBefore(JoinPoint joinPoint) {
-      counter++;
-      log.info("Перед вызовом метода: " +
-          joinPoint.getSignature().getName());
-    }
-
-    @Around("execution(* app.api.controller.*.*(..))")
-    public Object measureExecutionTime(ProceedingJoinPoint joinPoint)
-        throws Throwable {
-      counter++;
-      Instant startTime = Instant.now();
-      Object result = joinPoint.proceed();
-      Instant endTime = Instant.now();
-      Duration duration = Duration.between(startTime, endTime);
-      log.info("Метод " + joinPoint.getSignature().getName()
-          + " выполнен за " + duration.toMillis() + " мс");
-      return result;
-    }
+  public void resetCounter() {
+    counter = 0;
   }
+
+  @Before("execution(* app.api.controller.*.*(..))")
+  public void logBefore(JoinPoint joinPoint) {
+    counter++;
+    log.info("Перед вызовом метода: " +
+        joinPoint.getSignature().getName());
+  }
+
+  @Around("execution(* app.api.controller.*.*(..))")
+  public Object measureExecutionTime(ProceedingJoinPoint joinPoint)
+      throws Throwable {
+    counter++;
+    Instant startTime = Instant.now();
+    Object result = joinPoint.proceed();
+    Instant endTime = Instant.now();
+    Duration duration = Duration.between(startTime, endTime);
+    log.info("Метод " + joinPoint.getSignature().getName()
+        + " выполнен за " + duration.toMillis() + " мс");
+    return result;
+  }
+
+  public int getCounter() {
+    return counter;
+  }
+}

@@ -1,3 +1,3 @@
 package app.api.entity;
 
-public record ArticleId(int id) {}
+public record ArticleId(Long id) {}

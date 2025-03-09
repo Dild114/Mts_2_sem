@@ -1,6 +1,6 @@
 package app.api.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,32 +8,35 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
-@Data
 @Entity
-@Table(name = "categories")
-public class Category {
+@Table(name = "user_article_category")
+@Data
+@AllArgsConstructor
+public class UserArticleCategory {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-  @NotNull
-  private String name;
-
 
   @ManyToOne
   @JoinColumn(name = "user_id", nullable = false)
   private User user;
 
-  public Category(String name) {
-    this.name = name;
-  }
+  @ManyToOne
+  @JoinColumn(name = "article_id", nullable = false)
+  private Article article;
 
-  protected Category() {}
+  @ManyToOne
+  @JoinColumn(name = "category_id", nullable = false)
+  private Category category;
 
-  public Category(String name, User user) {
-    this.name = name;
+  public UserArticleCategory() {}
+
+  public UserArticleCategory(User user, Article article, Category category) {
     this.user = user;
+    this.article = article;
+    this.category = category;
   }
 }
