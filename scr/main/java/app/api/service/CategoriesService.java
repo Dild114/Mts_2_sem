@@ -5,6 +5,7 @@ import app.api.entity.CategoryId;
 import app.api.entity.UserId;
 import app.api.repository.CategoryRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,6 +28,8 @@ public class CategoriesService {
     log.info("findById({})", id);
    return category;
   }
+
+  @Async
   public void delete(CategoryId id, UserId userId) {
     categoryRepository.delete(id, userId);
     log.info("Deleting Category with id {}", id);

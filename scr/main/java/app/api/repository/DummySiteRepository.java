@@ -5,6 +5,7 @@ import app.api.entity.SiteId;
 import app.api.entity.UserId;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class DummySiteRepository implements SiteRepository {
 
   @Override
   public List<Site> findAllSite(UserId userId) {
-    return null;
+    return new ArrayList<>();
   }
 
   @Override
