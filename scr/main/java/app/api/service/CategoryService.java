@@ -23,15 +23,20 @@ public class CategoryService {
     return categoryRepository.findAll(userId);
   }
   public Category findById(CategoryId id) {
+    Category category = categoryRepository.findById(id);
     log.info("findById({})", id);
-   return null;
+   return category;
   }
   public void delete(CategoryId id, UserId userId) {
+    categoryRepository.delete(id, userId);
     log.info("Deleting Category with id {}", id);
   }
 
   public CategoryId create(String name, UserId userId) {
+    CategoryId categoryId = categoryRepository.getCategoryId();
+    Category category = new Category(categoryId, name, userId);
+    categoryRepository.create(category);
     log.info("Creating Category with name {}", name);
-    return null;
+    return categoryId;
   }
 }

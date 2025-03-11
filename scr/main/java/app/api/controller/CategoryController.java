@@ -5,7 +5,6 @@ import app.api.entity.CategoryId;
 import app.api.entity.UserId;
 import app.api.service.CategoryService;
 import app.api.controller.interfaceDrivenControllers.CategoryControllerInterface;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,18 +23,18 @@ public class CategoryController implements CategoryControllerInterface {
   }
 
   @Override
-  public ResponseEntity<List<Category>> getMyCategories(long userId) {
+  public ResponseEntity<List<Category>> getMyCategories(UserId userId) {
     log.info("Fetching categories for userId: {}", userId);
-    List<Category> categories = categoryService.findAll(new UserId(userId));
+    List<Category> categories = categoryService.findAll(userId);
     return ResponseEntity.ok(categories);
   }
 
   @Override
-  public ResponseEntity<?> addCategory(String name, int userId) {
-    log.info("Adding category for userId: {}", userId);
+  public ResponseEntity<?> addCategory(CategoryRequest categoryRequest) {
+    log.info("Add category for userId: {}", categoryRequest.userId());
     try {
-      CategoryId categoryId = categoryService.create(name, new UserId(userId));
-      return ResponseEntity.ok(categoryId);
+      CategoryId categoryId = categoryService.create(categoryRequest.name(), categoryRequest.userId());
+      return ResponseEntity.status(HttpStatus.OK).body(categoryId);
     } catch (Exception e) {
       log.error("Failed to add category: {}", e.getMessage());
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -43,11 +42,11 @@ public class CategoryController implements CategoryControllerInterface {
   }
 
   @Override
-  public ResponseEntity<?> deleteCategory(long id, int userId) {
+  public ResponseEntity<HttpStatus> deleteCategory(int id, UserId userId) {
     log.info("Deleting category with ID: {} for userId: {}", id, userId);
     try {
-      categoryService.delete(new CategoryId(id), new UserId(userId));
-      return ResponseEntity.ok("Category deleted with ID: " + id);
+      categoryService.delete(new CategoryId(id), userId);
+      return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     } catch (Exception e) {
       log.error("Failed to delete category: {}", e.getMessage());
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

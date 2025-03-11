@@ -1,6 +1,8 @@
 package app.api.controller.interfaceDrivenControllers;
 
+import app.api.controller.CategoryRequest;
 import app.api.entity.Category;
+import app.api.entity.UserId;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -19,7 +21,7 @@ public interface CategoryControllerInterface {
   @GetMapping
   ResponseEntity<List<Category>> getMyCategories(
       @Parameter(description = "ID пользователя", required = true)
-      @RequestBody long userId
+      @RequestBody UserId userId
   );
 
   @Operation(summary = "Добавить категорию пользователю")
@@ -27,11 +29,7 @@ public interface CategoryControllerInterface {
   @ApiResponse(responseCode = "400", description = "Некорректные данные")
   @PostMapping
   ResponseEntity<?> addCategory(
-      @Parameter(description = "Имя категории", required = true)
-      @RequestBody String name,
-
-      @Parameter(description = "ID пользователя", required = true)
-      @RequestBody int userId
+      @RequestBody CategoryRequest categoryRequest
   );
 
   @Operation(summary = "Удалить категорию пользователю по ID")
@@ -40,10 +38,10 @@ public interface CategoryControllerInterface {
   @DeleteMapping("/{id}")
   ResponseEntity<?> deleteCategory(
       @Parameter(description = "ID категории", required = true)
-      @PathVariable long id,
+      @PathVariable int id,
 
       @Parameter(description = "ID пользователя", required = true)
-      @RequestBody int userId
+      @RequestBody UserId userId
   );
 
   @Operation(summary = "Добавить категории пользователю")

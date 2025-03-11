@@ -10,9 +10,11 @@ import java.util.Map;
 
 @Repository
 public class DummyArticleRepository implements ArticleRepository {
+  int countId = 0;
   @Override
   public ArticleId generateId() {
-    return null;
+    countId += 1;
+    return new ArticleId(countId);
   }
 
   @Override

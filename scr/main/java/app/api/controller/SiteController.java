@@ -5,7 +5,6 @@ import app.api.entity.SiteId;
 import app.api.entity.UserId;
 import app.api.service.SiteService;
 import app.api.controller.interfaceDrivenControllers.SiteControllerInterface;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +31,7 @@ public class SiteController implements SiteControllerInterface {
     for (var site : Sites.values()) {
       sites.put(site.getUrl(), ind++);
     }
-    return ResponseEntity.ok(sites);
+    return ResponseEntity.status(HttpStatus.OK).body(sites);
   }
 
   @Override
@@ -43,12 +42,11 @@ public class SiteController implements SiteControllerInterface {
   }
 
   @Override
-  public ResponseEntity<?> addSite(int siteId, int userId) {
+  public ResponseEntity<SiteId> addSite(int siteId, @RequestBody UserId userId) {
     log.info("Adding site for userId: {}", userId);
     try {
-      UserId userId1 = new UserId(userId);
-      siteService.addSite(new SiteId(siteId), userId1);
-      return ResponseEntity.ok("site added with id: " + siteId);
+      siteService.addSite(new SiteId(siteId), userId);
+      return ResponseEntity.status(HttpStatus.CREATED).body(new SiteId(siteId));
     } catch (Exception e) {
       log.error("Adding site failed: ", e);
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -56,12 +54,11 @@ public class SiteController implements SiteControllerInterface {
   }
 
   @Override
-  public ResponseEntity<?> deleteSite(int siteId, int userId) {
+  public ResponseEntity<Integer> deleteSite(int siteId, UserId userId) {
     log.info("Deleting site for userId: {}", userId);
     try {
-      UserId userId1 = new UserId(userId);
-      siteService.deleteSite(new SiteId(siteId), userId1);
-      return ResponseEntity.ok("site deleted with id: " + siteId);
+      siteService.deleteSite(new SiteId(siteId), userId);
+      return ResponseEntity.ok(siteId);
     } catch (Exception e) {
       log.error("Deleting site failed", e);
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

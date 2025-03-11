@@ -1,14 +1,14 @@
 package app.api.controller.interfaceDrivenControllers;
 
 import app.api.entity.Site;
+import app.api.entity.SiteId;
+import app.api.entity.UserId;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Tag(name = "SiteControllerInterface", description = "Управление сайтами")
 @RequestMapping("/site")
@@ -31,13 +31,13 @@ public interface SiteControllerInterface {
   @Operation(summary = "Добавить сайт пользователю")
   @ApiResponse(responseCode = "200", description = "Добавлен сайт пользователю")
   @ApiResponse(responseCode = "400", description = "Некорректные данные")
-  @PatchMapping("/{id}")
-  ResponseEntity<?> addSite(
+  @PatchMapping("/{siteId}")
+  ResponseEntity<SiteId> addSite(
       @Parameter(description = "ID сайта", required = true)
-      @PathVariable int id,
+      @PathVariable int siteId,
 
       @Parameter(description = "ID пользователя", required = true)
-      @RequestBody int userId
+      @RequestBody UserId userId
   );
 
   @Operation(summary = "Удалить сайт пользователя")
@@ -49,6 +49,6 @@ public interface SiteControllerInterface {
       @PathVariable int id,
 
       @Parameter(description = "ID пользователя", required = true)
-      @RequestBody int userId
+      @RequestBody UserId userId
   );
 }

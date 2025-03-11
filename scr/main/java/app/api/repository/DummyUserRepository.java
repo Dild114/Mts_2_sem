@@ -6,14 +6,16 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class DummyUserRepository implements UserRepository {
+  int countId = 0;
   @Override
   public UserId generateId() {
-    return null;
+    countId += 1;
+    return new UserId(countId);
   }
 
   @Override
   public UserId createAccount(User user) {
-    return new UserId(-1);
+    return generateId();
   }
 
   @Override

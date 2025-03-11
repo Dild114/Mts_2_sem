@@ -20,8 +20,9 @@ public class ArticleService {
   }
 
   public Map<Article, Category> getArticles(UserId userId) {
+    Map<Article, Category> articles = articleRepository.getArticles(userId);
     log.info("getArticles userId={}", userId);
-    return null;
+    return articles;
   }
 
 }
