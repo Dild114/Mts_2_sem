@@ -11,10 +11,10 @@ import java.util.List;
 
 @Slf4j
 @Service
-public class SiteService {
+public class SitesService {
   public SiteRepository siteRepository;
 
-  public SiteService(SiteRepository siteRepository) {
+  public SitesService(SiteRepository siteRepository) {
     this.siteRepository = siteRepository;
   }
 

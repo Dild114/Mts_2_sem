@@ -3,9 +3,8 @@ package app.api.controller;
 import app.api.entity.Article;
 import app.api.entity.Category;
 import app.api.entity.UserId;
-import app.api.service.ArticleService;
-import app.api.controller.interfaceDrivenControllers.ArticleControllerInterface;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import app.api.service.ArticlesService;
+import app.api.controller.interfacedrivencontrollers.ArticleControllerInterface;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,19 +14,19 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-public class ArticleController implements ArticleControllerInterface {
+public class ArticlesController implements ArticleControllerInterface {
 
-  private final ArticleService articleService;
+  private final ArticlesService articlesService;
 
-  public ArticleController(ArticleService articleService) {
-    this.articleService = articleService;
+  public ArticlesController(ArticlesService articlesService) {
+    this.articlesService = articlesService;
   }
 
   @Override
   public ResponseEntity<Map<Article, Category>> getArticles(int id) {
     log.info("Fetching articles for userId={}", id);
     try {
-      Map<Article, Category> articles = articleService.getArticles(new UserId(id));
+      Map<Article, Category> articles = articlesService.getArticles(new UserId(id));
       return ResponseEntity.ok(articles);
     } catch (Exception e) {
       log.error("get articles failed", e);

@@ -1,6 +1,6 @@
 package app.api.controller;
 
 
-public record UserRequest (
+public record UsersRequest(
   String name,
   String password) {}

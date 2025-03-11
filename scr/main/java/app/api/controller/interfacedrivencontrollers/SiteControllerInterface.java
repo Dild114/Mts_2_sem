@@ -1,6 +1,5 @@
-package app.api.controller.interfaceDrivenControllers;
+package app.api.controller.interfacedrivencontrollers;
 
-import app.api.entity.Site;
 import app.api.entity.SiteId;
 import app.api.entity.UserId;
 import io.swagger.v3.oas.annotations.Operation;

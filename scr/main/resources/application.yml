@@ -5,3 +5,16 @@ springdoc:
     path: /v3/api-docs
   swagger-ui:
     path: /swagger-ui.html
+management:
+  endpoints:
+    web:
+      base-path: /admin/actuator
+      exposure:
+        include: "*"
+        exclude: shutdown
+
+#spring:
+#  security:
+#    user:
+#      name: admin
+#      password: admin

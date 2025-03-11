@@ -1,9 +1,9 @@
 package app.api.controller;
 
-import app.api.controller.interfaceDrivenControllers.UserControllerInterface;
+import app.api.controller.interfacedrivencontrollers.UserControllerInterface;
 import app.api.entity.User;
 import app.api.entity.UserId;
-import app.api.service.UserService;
+import app.api.service.UsersService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,22 +12,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-public class UserController implements UserControllerInterface {
+public class UsersController implements UserControllerInterface {
 
-  private final UserService userService;
+  private final UsersService usersService;
 
-  public UserController(UserService userService) {
-    this.userService = userService;
+  public UsersController(UsersService usersService) {
+    this.usersService = usersService;
   }
 
   @Override
-  public ResponseEntity<UserId> createUser(@RequestBody UserRequest userRequest) {
+  public ResponseEntity<UserId> createUser(@RequestBody UsersRequest usersRequest) {
     log.info("createUser");
-    if (userRequest == null || userRequest.name() == null || userRequest.name().isEmpty()) {
+    if (usersRequest == null || usersRequest.name() == null || usersRequest.name().isEmpty()) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
     try {
-      UserId userId = userService.createUser(userRequest.name(), userRequest.password());
+      UserId userId = usersService.createUser(usersRequest.name(), usersRequest.password());
       return ResponseEntity.status(HttpStatus.CREATED).body(userId);
     } catch (Exception e) {
       log.error("createUser failed", e);
@@ -40,7 +40,7 @@ public class UserController implements UserControllerInterface {
     log.info("deleteUser");
     UserId userId = new UserId(id);
     try {
-      userService.deleteUser(userId);
+      usersService.deleteUser(userId);
       return ResponseEntity.noContent().build();
     } catch (Exception e) {
       log.error("deleteUser failed", e);
@@ -49,12 +49,12 @@ public class UserController implements UserControllerInterface {
   }
 
   @Override
-  public ResponseEntity<?> updateUserData(int id, UserRequest userRequest) {
+  public ResponseEntity<?> updateUserData(int id, UsersRequest usersRequest) {
     log.info("Update user data with id: {}", id);
     UserId userId = new UserId(id);
-    User user = new User(userRequest.name(), userRequest.password());
+    User user = new User(usersRequest.name(), usersRequest.password());
     try {
-      userService.updateUserData(userId, user);
+      usersService.updateUserData(userId, user);
       return ResponseEntity.ok("update successful");
     } catch (Exception e) {
       log.error("update user failed ", e);
@@ -67,7 +67,7 @@ public class UserController implements UserControllerInterface {
     log.info("update username with id: {}", id);
     UserId userId = new UserId(id);
     try {
-      userService.updateUserName(userId, name);
+      usersService.updateUserName(userId, name);
       return ResponseEntity.noContent().build();
     } catch (Exception e) {
       log.error("update UserName failed", e);

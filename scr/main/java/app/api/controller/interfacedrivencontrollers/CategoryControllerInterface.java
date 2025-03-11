@@ -1,6 +1,6 @@
-package app.api.controller.interfaceDrivenControllers;
+package app.api.controller.interfacedrivencontrollers;
 
-import app.api.controller.CategoryRequest;
+import app.api.controller.CategoriesRequest;
 import app.api.entity.Category;
 import app.api.entity.UserId;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,7 +29,7 @@ public interface CategoryControllerInterface {
   @ApiResponse(responseCode = "400", description = "Некорректные данные")
   @PostMapping
   ResponseEntity<?> addCategory(
-      @RequestBody CategoryRequest categoryRequest
+      @RequestBody CategoriesRequest categoriesRequest
   );
 
   @Operation(summary = "Удалить категорию пользователю по ID")

@@ -3,8 +3,8 @@ package app.api.controller;
 import app.api.entity.Site;
 import app.api.entity.SiteId;
 import app.api.entity.UserId;
-import app.api.service.SiteService;
-import app.api.controller.interfaceDrivenControllers.SiteControllerInterface;
+import app.api.service.SitesService;
+import app.api.controller.interfacedrivencontrollers.SiteControllerInterface;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,12 +15,12 @@ import java.util.List;
 
 @Slf4j
 @RestController
-public class SiteController implements SiteControllerInterface {
+public class SitesController implements SiteControllerInterface {
 
-  private final SiteService siteService;
+  private final SitesService sitesService;
 
-  public SiteController(SiteService siteService) {
-    this.siteService = siteService;
+  public SitesController(SitesService sitesService) {
+    this.sitesService = sitesService;
   }
 
   @Override
@@ -37,7 +37,7 @@ public class SiteController implements SiteControllerInterface {
   @Override
   public ResponseEntity<?> mySites(int userId) {
     log.info("Getting sites for userId: {}", userId);
-    List<Site> sites = siteService.getSites(new UserId(userId));
+    List<Site> sites = sitesService.getSites(new UserId(userId));
     return ResponseEntity.ok(sites);
   }
 
@@ -45,7 +45,7 @@ public class SiteController implements SiteControllerInterface {
   public ResponseEntity<SiteId> addSite(int siteId, @RequestBody UserId userId) {
     log.info("Adding site for userId: {}", userId);
     try {
-      siteService.addSite(new SiteId(siteId), userId);
+      sitesService.addSite(new SiteId(siteId), userId);
       return ResponseEntity.status(HttpStatus.CREATED).body(new SiteId(siteId));
     } catch (Exception e) {
       log.error("Adding site failed: ", e);
@@ -57,7 +57,7 @@ public class SiteController implements SiteControllerInterface {
   public ResponseEntity<Integer> deleteSite(int siteId, UserId userId) {
     log.info("Deleting site for userId: {}", userId);
     try {
-      siteService.deleteSite(new SiteId(siteId), userId);
+      sitesService.deleteSite(new SiteId(siteId), userId);
       return ResponseEntity.ok(siteId);
     } catch (Exception e) {
       log.error("Deleting site failed", e);

@@ -11,10 +11,10 @@ import java.util.List;
 
 @Slf4j
 @Service
-public class CategoryService {
+public class CategoriesService {
   private final CategoryRepository categoryRepository;
 
-  public CategoryService(CategoryRepository categoryRepository) {
+  public CategoriesService(CategoryRepository categoryRepository) {
     this.categoryRepository = categoryRepository;
   }
 
