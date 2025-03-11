@@ -1,6 +1,7 @@
 package app.api.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,13 +28,16 @@ public class Article {
 
     @NotNull
     @Schema(description = "Имя Статьи", example = "ML")
+    @Column(name = "title")
     private String title;
 
     @Schema(description = "текст статьи")
+    @Column(name = "content")
     private String content;
 
     @NotNull
     @Schema(description = "Url ссылка статьи", example = "https://habr.com/ru/articles/814061/")
+    @Column(name = "url")
     private String url;
 
     @ManyToOne

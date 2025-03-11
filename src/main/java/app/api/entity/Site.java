@@ -3,6 +3,7 @@ package app.api.entity;
 import app.api.controller.Sites;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -32,6 +33,7 @@ public class Site {
     private Long id;
     @NotNull
     @Schema(description = "Url сайта", example = "https://habr.com/ru/articles/814061/")
+    @Column(name = "url")
     private String url;
 
     @ManyToOne

@@ -30,10 +30,12 @@ public class User {
 
   @NotNull()
   @Schema(description = "Имя пользователя", example = "Nikolay")
+  @Column(name = "name")
   private String name;
 
   @NotNull()
   @Schema(description = "Пароль пользователя", example = "qwerty")
+  @Column(name = "password")
   private String password;
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
